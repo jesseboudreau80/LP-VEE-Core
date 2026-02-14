@@ -1,274 +1,91 @@
-LP-VEE-Core
+# dp-vee-core
 
-LP-VEE-Core is a compliance-grade automation engine designed to power a Licensing & Permitting Virtual Employee (VEE) for multi-location pet and veterinary operations.
+Production-grade scaffolding for a modular Licensing & Permitting Virtual Employee (VEE) system.
 
-This project focuses on deterministic regulatory automation — not chatbots.
+> This repository is intentionally architecture-only for v1. No document extraction logic, Playwright implementation, or business rules are implemented yet.
 
-It ingests licensing and permit documents, extracts structured data, tracks expirations, orchestrates renewal workflows, and escalates risk to humans when needed.
+## Tech Stack
+- Python 3.11
+- SQLite (v1)
+- Typer (CLI)
+- Pydantic
+- python-dotenv
+- Docker / Docker Compose
 
-The goal is to move from reactive licensing management to structured, audit-ready compliance infrastructure.
+## Setup Instructions
+1. Create and activate a Python 3.11 virtual environment.
+2. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+3. Create your environment file:
+   ```bash
+   cp .env.example .env
+   ```
+4. Update `.env` values if needed.
 
-🚀 Why This Exists
+## How to Run Locally
+```bash
+python -m app.main run
+```
 
-Multi-location regulatory environments are complex:
+Expected output:
+```text
+VEE Core initialized
+```
 
-Thousands of documents
+## How to Run in Docker
+Build and run with Docker Compose:
+```bash
+docker compose up --build
+```
 
-Hundreds of jurisdictions
+The service executes:
+```bash
+python -m app.main run
+```
 
-Different renewal rules
-
-Payment workflows
-
-Escalation requirements
-
-Risk of missed expirations
-
-Most compliance tracking today is manual, spreadsheet-driven, and reactive.
-
-LP-VEE-Core establishes the foundation for:
-
-Structured document intelligence
-
-Expiration tracking
-
-Renewal orchestration
-
-Human-controlled payment escalation
-
-Audit logging
-
-Secure automation boundaries
-
-This system is built for real-world governance, not demos.
-
-🏗 Architecture Philosophy
-
-LP-VEE-Core follows strict service separation:
-
-1️⃣ Document Intake Service
-
-Processes PDFs and semi-structured documents
-
-Extracts structured compliance data
-
-Outputs validated JSON
-
-No external system access
-
-No shell execution
-
-2️⃣ VEE Orchestrator
-
-Matches documents to license records
-
-Determines renewal status
-
-Updates tracker representation
-
-Generates escalation tasks
-
-Drafts notification emails
-
-3️⃣ Escalation Layer
-
-Human approval for:
-
-Payments
-
-Low-confidence extraction
-
-Conflicting data
-
-Portal submissions
-
-4️⃣ Storage Layer
-
-SQLite (v1)
-
-Documents
-
-Licenses
-
-Escalations
-
-Audit logs
-
-Future phases will integrate:
-
-Agilence
-
-Playwright automation
-
-Okta-authenticated portals
-
-Microsoft 365
-
-Regulatory portal directory
-
-🔐 Security & Governance Principles
-
-Document processing is isolated
-
-No automatic payment submission
-
-No uncontrolled system execution
-
-Confidence scoring + manual review thresholds
-
-Audit-first architecture
-
-Environment-configured behavior
-
-Containerized deployment
-
-This system is designed to be governance-compatible.
-
-📦 Repository Structure
-LP-VEE-Core/
-│
-├── docker-compose.yml
-├── Dockerfile
-├── .env.example
-├── requirements.txt
-│
+## Folder Explanation
+```text
+dp-vee-core/
+├── docker-compose.yml        # Container orchestration for local runtime
+├── Dockerfile                # Python 3.11 container image definition
+├── .env.example              # Required environment variable template
+├── requirements.txt          # Python dependencies
+├── README.md                 # Project documentation
 ├── app/
-│   ├── main.py
-│   ├── cli.py
-│   ├── config.py
+│   ├── main.py               # Module entrypoint (python -m app.main)
+│   ├── config.py             # Environment loading and validation
+│   ├── cli.py                # Typer CLI commands
+│   ├── logging_config.py     # Central logging setup
 │   ├── db/
-│   ├── schemas/
-│   ├── services/
-│   ├── interfaces/
-│   ├── utils/
-│
-├── data/
+│   │   ├── models.py         # SQLite DDL for v1 tables
+│   │   ├── database.py       # Database connection and initialization
+│   │   ├── migrations.py     # Migration placeholder
+│   ├── schemas/              # Pydantic schemas
+│   ├── services/             # Core service layer scaffolds
+│   ├── interfaces/           # External integration interface scaffolds
+│   ├── utils/                # Utility placeholders
+├── data/                     # Runtime data directories
 │   ├── inbox/
 │   ├── outbox/
 │   ├── tracker/
-│
-├── logs/
-└── tests/
+├── logs/                     # Log output directory
+└── tests/                    # Test suite scaffolding
+```
 
-⚙️ Setup
-1. Clone Repository
-git clone https://github.com/YOUR_USERNAME/LP-VEE-Core.git
-cd LP-VEE-Core
+## Configuration
+Required environment variables:
+- `DB_PATH`
+- `CONFIDENCE_THRESHOLD`
+- `INBOX_PATH`
+- `OUTBOX_PATH`
+- `TRACKER_PATH`
+- `LOG_LEVEL`
 
-2. Create Environment File
-
-Copy:
-
-.env.example
-
-
-to:
-
-.env
-
-
-Update values:
-
-DB_PATH=./lp_vee.db
-CONFIDENCE_THRESHOLD=0.85
-INBOX_PATH=./data/inbox
-OUTBOX_PATH=./data/outbox
-TRACKER_PATH=./data/tracker/universal.xlsx
-LOG_LEVEL=INFO
-
-3. Install Dependencies
-pip install -r requirements.txt
-
-4. Run the Engine
-python -m app.main run
-
-
-You should see:
-
-VEE Core initialized
-
-🐳 Docker
-
-Build:
-
-docker-compose up --build
-
-
-The service will start using environment configuration.
-
-📂 How V1 Will Work
-
-Drop licensing PDFs into:
-
-data/inbox/
-
-
-Run engine.
-
-Engine will:
-
-Extract structured fields
-
-Validate data
-
-Match against tracker
-
-Write JSON outputs to:
-
-data/outbox/
-
-
-Create escalation records if needed
-
-Append audit logs
-
-No external systems are touched in V1.
-
-🛣 Roadmap
-Phase 1
-
-Tracker import (XLSX normalization)
-
-PDF field extraction
-
-Matching logic
-
-Escalation queue
-
-Email draft generation
-
-Phase 2
-
-Portal directory registry
-
-Playwright automation (isolated service)
-
-Okta session handling
-
-Agilence task creation
-
-Phase 3
-
-Microsoft 365 integration
-
-Payment workflow approval queue
-
-Multi-document correlation
-
-Confidence anomaly detection
-
-🎯 Long-Term Vision
-
-LP-VEE-Core is the foundation layer for compliance automation across:
-
-Pet boarding centers
-
-Veterinary hospitals
-
-Grooming operations
-
-Multi-state service organizations
-
-The system is designed to scale across 50-state regulatory complexity while preserving human control and auditability.
-
-This is infrastructure — not a chatbot.
+## Future Roadmap
+- Add structured migrations and schema versioning.
+- Implement document intake parsing pipeline.
+- Add orchestration workflows and business rules.
+- Implement integrations (Agilence, M365, browser auth).
+- Expand automated tests and CI/CD checks.
