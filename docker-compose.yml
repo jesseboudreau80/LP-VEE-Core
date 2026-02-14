@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  dp-vee-core:
+    build: .
+    container_name: dp-vee-core
+    env_file:
+      - .env
+    volumes:
+      - ./:/app
+    command: ["python", "-m", "app.main", "run"]
