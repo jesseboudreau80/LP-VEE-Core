@@ -23,7 +23,8 @@ class Settings(BaseModel):
 def load_settings() -> Settings:
     """Load and validate application settings from .env and environment."""
 
-    load_dotenv()
+    load_dotenv(".env.example", override=False)
+    load_dotenv(override=False)
 
     raw = {
         "DB_PATH": os.getenv("DB_PATH"),

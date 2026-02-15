@@ -45,4 +45,28 @@ CREATE TABLE IF NOT EXISTS audit_log (
 );
 """
 
-ALL_TABLES = [DOCUMENTS_TABLE, LICENSES_TABLE, ESCALATIONS_TABLE, AUDIT_LOG_TABLE]
+TRACKER_ENTRIES_TABLE = """
+CREATE TABLE IF NOT EXISTS tracker_entries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    center_id TEXT NOT NULL,
+    license_permit_type TEXT NOT NULL,
+    issuing_authority TEXT NOT NULL,
+    jurisdiction TEXT,
+    license_number TEXT,
+    expiration_date TEXT,
+    renewal_window_start TEXT,
+    status TEXT,
+    raw TEXT NOT NULL,
+    created_at TEXT NOT NULL,
+    updated_at TEXT NOT NULL,
+    UNIQUE(center_id, license_permit_type, issuing_authority)
+);
+"""
+
+ALL_TABLES = [
+    DOCUMENTS_TABLE,
+    LICENSES_TABLE,
+    ESCALATIONS_TABLE,
+    AUDIT_LOG_TABLE,
+    TRACKER_ENTRIES_TABLE,
+]

@@ -45,6 +45,29 @@ The service executes:
 python -m app.main run
 ```
 
+## Tracker Importer
+Import a tracker XLSX into the SQLite database:
+```bash
+python -m app.main import-tracker data/tracker/tracker.xlsx
+```
+
+If no path is provided, the CLI uses `TRACKER_PATH/tracker.xlsx`. The command prints a deterministic summary like:
+```json
+{
+  "processed": 2,
+  "inserted": 2,
+  "skipped": 0,
+  "updated": 0
+}
+```
+
+## Renewal Evaluation
+Recalculate license statuses based on expiration timelines and renewal windows:
+```bash
+python -m app.main evaluate-licenses
+```
+Outputs a JSON summary of counts across status categories.
+
 ## Folder Explanation
 ```text
 dp-vee-core/
